@@ -76,7 +76,7 @@ function Buscador(props) {
             setTextoDeshabilitado(true);
             setBotonDeshabilitado(true);
 
-            let txt = `https://newsapi.org/v2/everything?q=${strBuscar}&language=${strLanguage}&pageSize=${nPageSize}&page=${nPage}&sortBy=publishedAt&apiKey=${strApiKey}`;
+            let txt = `https://ficticia-react.herokuapp.com/https://newsapi.org/v2/everything?q=${strBuscar}&language=${strLanguage}&pageSize=${nPageSize}&page=${nPage}&sortBy=publishedAt&apiKey=${strApiKey}`;
             //let txt = `https://newsapi.org/v2/everything?q=${strBuscar}&language=${strLanguage}&pageSize=${nPageSize}&page=${nPage}&sortBy=publishedAt`;
 
             Axios({ url: txt, })
