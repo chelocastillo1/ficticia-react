@@ -5,7 +5,7 @@ import {PaginacionContext} from './Layout';
 import BuscadorResultado from './BuscadorResultado';
 
 function Buscador(props) {
-    const strApiKey = 'e18accae9c5e474e888257f65ef518f9';
+    const strApiKey = 'e18accae9c5e474e888257f65ef518f91';
     //const strApiKey = '1cbaa6470fb5490db4958d6ded5978d3';
     
     const array_errors = [ // Listado de algunos errores que puede devolver newsapi.org en las peticiones.
@@ -143,7 +143,8 @@ function Buscador(props) {
                     </Row>
                     <Row>
                         <Col className="text-break">
-                            <strong>Mensaje:</strong>&nbsp;{ array_errors.find((e) => {return (e.code === (error.response.data != null ? error.response.data.code : error.code) ? e.text : null)}).text }
+                            <strong>Mensaje:</strong>&nbsp;{ array_errors.filter((e) => e.code === (error.response.data != null ? error.response.data.code : error.code))
+                                                            .map(f => f.text) }
                         </Col>
                     </Row>
                 </Alert>
@@ -151,6 +152,7 @@ function Buscador(props) {
             :
             ""
             )
+        //<strong>Mensaje:</strong>&nbsp;{ array_errors.find((e) => {return (e.code === (error.response.data != null ? error.response.data.code : error.code) ? e.text : null)}).text }
         }
         </>
     );
