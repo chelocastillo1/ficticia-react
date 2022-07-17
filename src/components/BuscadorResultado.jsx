@@ -1,6 +1,6 @@
-import React, { useContext, useEffect, useState } from 'react'
-import { Alert, Col, Container, Image, Pagination, Row } from 'react-bootstrap'
-import { PaginacionContext } from './Layout';
+import React, { useContext, useEffect, useState } from 'react';
+import { Alert, Col, Container, Image, Pagination, Row } from 'react-bootstrap';
+import { DataContext } from './Contexto';
 
 export function getStringDate(d) {
     let mes = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
@@ -71,7 +71,7 @@ function BuscadorResultado(props) {
 
     const array_pages = [10, 20, 30, 40, 50]; // Cantidades de noticias a mostrar por página
 
-    const {nPage, setPage, nPageSize, setPageSize} = useContext(PaginacionContext);
+    const { nPage, setPage, nPageSize,setPageSize } = useContext(DataContext);
     const [data, setData] = useState(props.data);
    
     useEffect( // Solo se ejecutará cuando props.data cambie.
@@ -81,10 +81,11 @@ function BuscadorResultado(props) {
     );
 
     // Calcular el total de páginas, según el tamaño de elementos a mostrar en cada página (nPageSize).
-    let nTotalPages = Math.ceil(data.totalResults / nPageSize);;
+    let nTotalPages = Math.ceil(data.totalResults / nPageSize);
+    // Obtener array para paginación
     let a = getArrayPaginacion(nPage, nPageSize, nTotalPages);
 
-    if(data != null) { // && data.totalResults > 0
+    if(data !== null) { // && data.totalResults > 0
         if(data.totalResults > 0)
             return (
             <>

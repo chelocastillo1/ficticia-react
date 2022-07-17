@@ -1,7 +1,7 @@
 import { Container, Row, Col } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 
-function Error404(props) {
+function Error404(/*props*/) {
   return (
     <Container>
       <Row>

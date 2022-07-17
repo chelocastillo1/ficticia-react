@@ -1,10 +1,10 @@
-import React, { useContext, useEffect, useState } from 'react'
-import { Alert, Button, Col, Container, FloatingLabel, Form, Row, Spinner } from 'react-bootstrap'
+import React, { useContext, useEffect, useState } from 'react';
+import { Alert, Button, Col, Container, FloatingLabel, Form, Row, Spinner } from 'react-bootstrap';
 import Axios from 'axios';
-import {PaginacionContext} from './Layout';
+import { DataContext } from './Contexto';
 import BuscadorResultado from './BuscadorResultado';
 
-function Buscador(props) {
+function Buscador(/*props*/) {
     const strApiKey = 'e18accae9c5e474e888257f65ef518f9';
     //const strApiKey = '1cbaa6470fb5490db4958d6ded5978d3';
     
@@ -43,7 +43,8 @@ function Buscador(props) {
         {id: 'zh', descripcion: 'Chino', disabled: false}
     ];
 
-    const {nPage, setPage, nPageSize, strLanguage, setLanguage} = useContext(PaginacionContext); // importamos contexto
+    const { nPage, setPage, nPageSize, strLanguage, setLanguage, setHasData } = useContext(DataContext);
+
     const [error, setError] = useState(null);
     const [bCargando, setCargando] = useState(false);
     const [bBotonDeshabilitado, setBotonDeshabilitado] = useState(true); // si está deshabilitado el botón de búsqueda
@@ -77,24 +78,36 @@ function Buscador(props) {
             setBotonDeshabilitado(true);
 
             //https://ficticia-react.herokuapp.com/
-            let txt = `https://newsapi.org/v2/everything?q=${strBuscar}&language=${strLanguage}&pageSize=${nPageSize}&page=${nPage}&sortBy=publishedAt&apiKey=${strApiKey}`;
-            //let txt = `https://newsapi.org/v2/everything?q=${strBuscar}&language=${strLanguage}&pageSize=${nPageSize}&page=${nPage}&sortBy=publishedAt`;
+            let strURI = `https://newsapi.org/v2/everything?q=${strBuscar}&language=${strLanguage}&pageSize=${nPageSize}&page=${nPage}&sortBy=publishedAt&apiKey=${strApiKey}`;
+            //let strURI = `https://newsapi.org/v2/everything?q=${strBuscar}&language=${strLanguage}&pageSize=${nPageSize}&page=${nPage}&sortBy=publishedAt`;
 
-            Axios({ url: txt, })
-                .then((response) => { setData(response.data); setCargando(false); })
-                .catch((error) => { setError(error); setCargando(false); });
-
-            setTextoDeshabilitado(false);
-            setBotonDeshabilitado(false);
-            //setCargando(false);
+            Axios({ url: strURI, })
+                .then((response) => {
+                    setData(response.data);
+                })
+                .catch((error) => {
+                    setError(error);
+                })
+                .finally(() => {
+                    //setHasData(data !== null && data.totalResults > 0);
+                    setTextoDeshabilitado(false);
+                    setBotonDeshabilitado(false);
+                    setCargando(false);
+                });
         }
     };
 
     useEffect(
         () => {
-            if(strBuscar.trim().length > 2 && data != null)
+            if(strBuscar.trim().length > 2 && data !== null)
                 fxBuscar();
         }, [strLanguage, nPageSize, nPage]
+    );
+
+    useEffect(
+        () => {
+            setHasData(data !== null && data.totalResults > 0);
+        }, [data]
     );
 
     if(bCargando) // Si la newsapi.org no terminó de devolver una respuesta, se mostrará el spinner.
@@ -102,7 +115,6 @@ function Buscador(props) {
 
     return (
         <>
-        {  }
         <div className="d-flex justify-content-center m-4">
             <form>
                 <Row>
@@ -127,10 +139,10 @@ function Buscador(props) {
             </form>
         </div>
 
-        { data != null ?
-                <BuscadorResultado data={data} pageSize={data != null && data.totalResults < nPageSize ? data.totalResults : nPageSize} />
+        { data !== null ?
+                <BuscadorResultado data={data} pageSize={data !== null && data.totalResults < nPageSize ? data.totalResults : nPageSize} />
         :
-            (error != null ?
+            (error !== null ?
             <Container className="w-50">
                 <Alert key="warning" variant="warning">
                     <Row>
@@ -140,12 +152,12 @@ function Buscador(props) {
                     </Row>
                     <Row>
                         <Col>
-                            <strong>Código de error:&nbsp;</strong>{ error.response.data != null ? error.response.data.code : error.code }
+                            <strong>Código de error:&nbsp;</strong>{ error.response.data !== null ? error.response.data.code : error.code }
                         </Col>
                     </Row>
                     <Row>
                         <Col className="text-break">
-                            <strong>Mensaje:</strong>&nbsp;{ array_errors.filter((e) => e.code === (error.response.data != null ? error.response.data.code : error.code))
+                            <strong>Mensaje:</strong>&nbsp;{ array_errors.filter((e) => e.code === (error.response.data !== null ? error.response.data.code : error.code))
                                                             .map(e => {return(e.text);}) }
                         </Col>
                     </Row>
@@ -154,7 +166,6 @@ function Buscador(props) {
             :
             ""
             )
-        //<strong>Mensaje:</strong>&nbsp;{ array_errors.find((e) => {return (e.code === (error.response.data != null ? error.response.data.code : error.code) ? e.text : null)}).text }
         }
         </>
     );
