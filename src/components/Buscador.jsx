@@ -5,7 +5,7 @@ import {PaginacionContext} from './Layout';
 import BuscadorResultado from './BuscadorResultado';
 
 function Buscador(props) {
-    const strApiKey = 'e18accae9c5e474e888257f65ef518f91';
+    const strApiKey = 'e18accae9c5e474e888257f65ef518f9';
     //const strApiKey = '1cbaa6470fb5490db4958d6ded5978d3';
     
     const array_errors = [ // Listado de algunos errores que puede devolver newsapi.org en las peticiones.
@@ -13,6 +13,7 @@ function Buscador(props) {
         {code: "apiKeyExhausted", text: "Su API Key no tiene más solicitudes disponibles."},
         {code: "apiKeyInvalid", text: "Su API Key no se ha ingresado correctamente. Compruébelo dos veces e inténtalo de nuevo."},
         {code: "apiKeyMissing", text: "Falta su API Key en la solicitud."},
+        {code: "corsNotAllowed", text: "El Intercambio de Recursos de Origen Cruzado (CORS) no está habilitado."},
         {code: "maximumResultsReached", text: "Se ha alcanzado el máximo de resultados que permite obtener newsapi.org"},
         {code: "parameterInvalid", text: "Ha incluido un parámetro en su solicitud que actualmente no se admite."},
         {code: "parametersMissing", text: "Faltan parámetros obligatorios en la solicitud y no se puede completar."},
@@ -75,7 +76,7 @@ function Buscador(props) {
             setTextoDeshabilitado(true);
             setBotonDeshabilitado(true);
 
-            let txt = `https://newsapi.org/v2/everything?q=${strBuscar}&language=${strLanguage}&pageSize=${nPageSize}&page=${nPage}&sortBy=publishedAt&apiKey=${strApiKey}`;
+            let txt = `https://ficticia-react.herokuapp.com/https://newsapi.org/v2/everything?q=${strBuscar}&language=${strLanguage}&pageSize=${nPageSize}&page=${nPage}&sortBy=publishedAt&apiKey=${strApiKey}`;
             //let txt = `https://newsapi.org/v2/everything?q=${strBuscar}&language=${strLanguage}&pageSize=${nPageSize}&page=${nPage}&sortBy=publishedAt`;
 
             Axios({ url: txt, })
@@ -144,7 +145,7 @@ function Buscador(props) {
                     <Row>
                         <Col className="text-break">
                             <strong>Mensaje:</strong>&nbsp;{ array_errors.filter((e) => e.code === (error.response.data != null ? error.response.data.code : error.code))
-                                                            .map(f => f.text) }
+                                                            .map(f => (error.response.data != null ? error.response.data : error).message) }
                         </Col>
                     </Row>
                 </Alert>
