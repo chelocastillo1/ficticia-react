@@ -146,7 +146,7 @@ function Buscador(props) {
                     <Row>
                         <Col className="text-break">
                             <strong>Mensaje:</strong>&nbsp;{ array_errors.filter((e) => e.code === (error.response.data != null ? error.response.data.code : error.code))
-                                                            .map(f => (error.response.data != null ? error.response.data : error).message) }
+                                                            .map(e => {return(e.text);}) }
                         </Col>
                     </Row>
                 </Alert>
